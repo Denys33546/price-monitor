@@ -94,7 +94,9 @@ async def run_periodically(
     runs = 0
     while max_runs is None or runs < max_runs:
         try:
-            for change in await check_all_async(db, fetch, delay):
+            changes = await check_all_async(db, fetch, delay)
+            logger.info("Price check finished: %d change(s)", len(changes))
+            for change in changes:
                 await on_change(change)
         except Exception:  # one bad run must not stop the schedule
             logger.exception("Price check run failed")
