@@ -132,3 +132,11 @@ class Database:
             (product_id,),
         ).fetchall()
         return [(r["checked_at"], r["price"]) for r in rows]
+
+
+
+    def remove_all(self, chat_id: int) -> int:
+        """Delete every product of a chat (e.g. the user blocked the bot). Returns the count."""
+        with self.conn:
+            cur = self.conn.execute("DELETE FROM products WHERE chat_id = ?", (chat_id,))
+        return cur.rowcount

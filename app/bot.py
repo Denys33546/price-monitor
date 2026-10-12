@@ -7,13 +7,10 @@ import logging
 import math
 from urllib.parse import urlparse
 
-from aiogram import Bot, Dispatcher, Router
-from aiogram.client.default import DefaultBotProperties
-from aiogram.enums import ParseMode
+from aiogram import Router
 from aiogram.filters import Command, CommandObject
-from aiogram.types import BotCommand, BufferedInputFile, Message
+from aiogram.types import BufferedInputFile, Message
 
-from app.config import load_settings
 from app.db import Database, DuplicateProductError, TrackedProduct
 from app.scraper import ScraperError, fetch_product
 
@@ -167,32 +164,3 @@ async def cmd_export(message: Message, db: Database) -> None:
         return
     data = build_csv(db, products)
     await message.answer_document(BufferedInputFile(data, filename="price_history.csv"))
-
-
-# ---------- entry point ----------
-
-async def main() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-    settings = load_settings()
-    if not settings.bot_token:
-        raise SystemExit("BOT_TOKEN is not set. Put it in the .env file.")
-
-    db = Database(settings.db_path)
-    bot = Bot(token=settings.bot_token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    dp = Dispatcher(db=db)  # `db` is injected into handlers by parameter name
-    dp.include_router(router)
-    await bot.set_my_commands([
-        BotCommand(command="add", description="Track a product"),
-        BotCommand(command="list", description="Show tracked products"),
-        BotCommand(command="remove", description="Stop tracking a product"),
-        BotCommand(command="export", description="Download price history (CSV)"),
-        BotCommand(command="help", description="Help"),
-    ])
-    try:
-        await dp.start_polling(bot)
-    finally:
-        db.close()
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

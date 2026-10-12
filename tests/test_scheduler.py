@@ -73,3 +73,44 @@ def test_run_periodically_calls_callback(db):
     asyncio.run(run_periodically(db, 0, on_change, fetch=fetcher(40.0), delay=0, max_runs=2))
     assert len(received) == 1  # second run sees no further change
     assert received[0].new_price == 40.0
+
+    def test_run_periodically_survives_unexpected_errors(db):
+        db.add_product(1, URL, "Book", 50.0)
+        calls = {"n": 0}
+
+        def flaky(url):
+            calls["n"] += 1
+            if calls["n"] == 1:
+                raise RuntimeError("boom")  # not a ScraperError
+            return Product(url, "Book", 40.0)
+
+        received = []
+
+        async def on_change(change):
+            received.append(change)
+
+        asyncio.run(run_periodically(db, 0, on_change, fetch=flaky, delay=0, max_runs=2))
+        assert len(received) == 1
+
+
+
+
+
+
+def test_run_periodically_survives_unexpected_errors(db):
+    db.add_product(1, URL, "Book", 50.0)
+    calls = {"n": 0}
+
+    def flaky(url):
+        calls["n"] += 1
+        if calls["n"] == 1:
+            raise RuntimeError("boom")  # not a ScraperError
+        return Product(url, "Book", 40.0)
+
+    received = []
+
+    async def on_change(change):
+        received.append(change)
+
+    asyncio.run(run_periodically(db, 0, on_change, fetch=flaky, delay=0, max_runs=2))
+    assert len(received) == 1

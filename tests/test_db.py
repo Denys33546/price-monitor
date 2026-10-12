@@ -69,3 +69,15 @@ def test_remove_product_deletes_history(db):
     product_id = db.add_product(1, URL, "Book", 51.77)
     db.remove_product(1, product_id)
     assert db.get_history(product_id) == []
+
+
+
+
+
+def test_remove_all_only_for_given_chat(db):
+    db.add_product(1, URL, "Book", 5.0)
+    db.add_product(1, URL + "2", "Book 2", 5.0)
+    db.add_product(2, URL, "Book", 5.0)
+    assert db.remove_all(1) == 2
+    assert db.list_products(1) == []
+    assert len(db.list_products(2)) == 1
