@@ -7,6 +7,7 @@ packaging==26.3
 pluggy==1.6.0
 Pygments==2.21.0
 pytest==9.1.1
+python-dotenv==1.2.4
 requests==2.34.2
 soupsieve==3.0.1
 typing_extensions==4.16.0
