@@ -6,3 +6,6 @@ __pycache__/
 .idea/
 .pytest_cache/
 .DS_Store
+.coverage
+htmlcov/
+.ruff_cache/

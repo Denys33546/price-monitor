@@ -1,4 +1,5 @@
 """Application settings loaded from environment variables / .env file."""
+
 import os
 from dataclasses import dataclass
 

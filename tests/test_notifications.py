@@ -41,6 +41,7 @@ def api_error(cls):
 
 # ---------- should_notify ----------
 
+
 def test_notify_on_any_drop_without_target(db):
     assert should_notify(make_change(db, 50.0, 49.0)) is True
 
@@ -68,6 +69,7 @@ def test_no_notify_without_previous_price(db):
 
 # ---------- format_alert ----------
 
+
 def test_format_alert_content(db):
     text = format_alert(make_change(db, 50.0, 40.0, target=42.0, title="Tom & <Jerry>"))
     assert "Price drop!" in text
@@ -84,6 +86,7 @@ def test_format_alert_has_no_raw_angle_brackets_in_text(db):
 
 
 # ---------- notifier ----------
+
 
 def test_notifier_sends_alert(db):
     bot = FakeBot()
@@ -118,6 +121,7 @@ def test_notifier_survives_other_telegram_errors(db):
 
 
 # ---------- scheduler + notifier together ----------
+
 
 def test_full_flow_price_check_to_telegram_message(db):
     db.add_product(5, "https://books.toscrape.com/x", "Flow Book", 99.0, target_price=45.0)

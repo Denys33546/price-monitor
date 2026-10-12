@@ -1,7 +1,8 @@
 """SQLite storage for tracked products and their price history."""
+
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS products (
@@ -39,7 +40,7 @@ class TrackedProduct:
 
 
 def _now() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+    return datetime.now(UTC).isoformat(timespec="seconds")
 
 
 def _to_product(row: sqlite3.Row) -> TrackedProduct:
@@ -76,7 +77,8 @@ class Database:
         try:
             with self.conn:  # one transaction: both inserts or none
                 cur = self.conn.execute(
-                    "INSERT INTO products (chat_id, url, title, target_price, last_price, created_at) "
+                    "INSERT INTO products "
+                    "(chat_id, url, title, target_price, last_price, created_at) "
                     "VALUES (?, ?, ?, ?, ?, ?)",
                     (chat_id, url, title, target_price, price, now),
                 )
@@ -132,8 +134,6 @@ class Database:
             (product_id,),
         ).fetchall()
         return [(r["checked_at"], r["price"]) for r in rows]
-
-
 
     def remove_all(self, chat_id: int) -> int:
         """Delete every product of a chat (e.g. the user blocked the bot). Returns the count."""

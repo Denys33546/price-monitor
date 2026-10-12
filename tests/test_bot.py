@@ -43,6 +43,7 @@ def args(text):
 
 # ---------- parse_add_args ----------
 
+
 def test_parse_add_url_only():
     assert bot.parse_add_args(URL) == (URL, None)
 
@@ -58,13 +59,16 @@ def test_parse_add_usage_errors(text):
         bot.parse_add_args(text)
 
 
-@pytest.mark.parametrize("url", [
-    "http://localhost:8000/admin",
-    "https://evil.com/",
-    "http://books.toscrape.com@evil.com/",
-    "ftp://books.toscrape.com/",
-    "not a url",
-])
+@pytest.mark.parametrize(
+    "url",
+    [
+        "http://localhost:8000/admin",
+        "https://evil.com/",
+        "http://books.toscrape.com@evil.com/",
+        "ftp://books.toscrape.com/",
+        "not a url",
+    ],
+)
 def test_validate_url_rejects_unsafe(url):
     with pytest.raises(ValueError):
         bot.validate_url(url)
@@ -77,6 +81,7 @@ def test_parse_add_bad_target(target):
 
 
 # ---------- formatting / csv ----------
+
 
 def test_format_products_escapes_html(db):
     db.add_product(1, URL, "Tom & <Jerry>", 10.0, target_price=8.0)
@@ -96,6 +101,7 @@ def test_build_csv_contains_history_and_is_safe(db):
 
 
 # ---------- handlers ----------
+
 
 def patch_fetch(monkeypatch, price=51.77, title="A Light in the Attic"):
     monkeypatch.setattr(bot, "fetch_product", lambda url: Product(url, title, price))

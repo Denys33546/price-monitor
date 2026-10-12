@@ -1,4 +1,5 @@
 """Scraper for books.toscrape.com product pages."""
+
 from dataclasses import dataclass
 
 import requests
@@ -55,6 +56,6 @@ def fetch_product(url: str) -> Product:
 
 
 if __name__ == "__main__":
-    print(fetch_product(
-        "https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html"
-    ))
+    print(
+        fetch_product("https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html")
+    )

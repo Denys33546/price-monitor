@@ -1,4 +1,5 @@
 """Periodic price checks."""
+
 import asyncio
 import logging
 import time
@@ -20,9 +21,7 @@ class PriceChange:
     new_price: float
 
 
-def record_new_price(
-    db: Database, product: TrackedProduct, new_price: float
-) -> PriceChange | None:
+def record_new_price(db: Database, product: TrackedProduct, new_price: float) -> PriceChange | None:
     """Save a fetched price. Returns a PriceChange only if it differs from the last one."""
     try:
         old_price = db.record_price(product.id, new_price)

@@ -1,4 +1,5 @@
 """Application entry point: Telegram bot + periodic price checks."""
+
 import asyncio
 import contextlib
 import logging
@@ -24,7 +25,9 @@ COMMANDS = [
 
 
 async def main() -> None:
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s"
+    )
     settings = load_settings()
     if not settings.bot_token:
         raise SystemExit("BOT_TOKEN is not set. Put it in the .env file.")

@@ -1,4 +1,5 @@
 """Price-drop alerts sent through Telegram."""
+
 import html
 import logging
 from collections.abc import Awaitable, Callable

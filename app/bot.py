@@ -1,4 +1,5 @@
 """Telegram bot: commands for managing tracked products."""
+
 import asyncio
 import csv
 import html
@@ -38,6 +39,7 @@ HELP_TEXT = (
 
 # ---------- pure helpers (easy to test) ----------
 
+
 def validate_url(url: str) -> str:
     parsed = urlparse(url)
     if parsed.scheme not in ("http", "https") or parsed.hostname not in ALLOWED_HOSTS:
@@ -70,7 +72,9 @@ def format_products(products: list[TrackedProduct]) -> str:
     lines = []
     for p in products:
         target = f" (target {format_price(p.target_price)})" if p.target_price is not None else ""
-        lines.append(f"<b>{p.id}</b>. {html.escape(p.title)} - {format_price(p.last_price)}{target}")
+        lines.append(
+            f"<b>{p.id}</b>. {html.escape(p.title)} - {format_price(p.last_price)}{target}"
+        )
     return "\n".join(lines)
 
 
@@ -90,6 +94,7 @@ def build_csv(db: Database, products: list[TrackedProduct]) -> bytes:
 
 
 # ---------- handlers ----------
+
 
 @router.message(Command("start", "help"))
 async def cmd_start(message: Message) -> None:
@@ -116,7 +121,9 @@ async def cmd_add(message: Message, command: CommandObject, db: Database) -> Non
         scraped = await asyncio.to_thread(fetch_product, url)
     except ScraperError as exc:
         logger.warning("Cannot add %s: %s", url, exc)
-        await message.answer("Could not read the price from that page. Check the link and try again.")
+        await message.answer(
+            "Could not read the price from that page. Check the link and try again."
+        )
         return
 
     try:

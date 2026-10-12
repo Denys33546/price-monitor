@@ -1,4 +1,5 @@
 """Runs real aiogram routing (command filter + dependency injection) without Telegram."""
+
 import asyncio
 import datetime
 from unittest.mock import AsyncMock
